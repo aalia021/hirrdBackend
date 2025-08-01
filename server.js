@@ -5,17 +5,30 @@ const connectDB = require("./config/db");
 const cookieParser = require("cookie-parser");
 
 const authRoutes = require("./routes/authRoute");
+const jobRoutes = require("./routes/jobRoutes");
+const applicationRoutes = require("./routes/applicationRoute");
+const savedJobRoutes = require("./routes/savedJobRoutes");
+const companyRoutes = require("./routes/companyRoutes");
 
 dotenv.config();
 
 const app = express();
-app.use(cors());
+const corsOptions = {
+  origin: "http://localhost:5173",
+  credentials: true, // 👈 allow cookies
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser());
+app.use("/api/auth", authRoutes);
 app.use("/uploads", express.static("uploads"));
+app.use("/api/jobs", jobRoutes);
+app.use("/api", applicationRoutes);
+app.use("/api/jobs", savedJobRoutes);
+app.use("/api", companyRoutes);
 
 // Routes
-app.use("/api/auth", authRoutes);
 
 // ✅ Only connect DB once here
 connectDB()
